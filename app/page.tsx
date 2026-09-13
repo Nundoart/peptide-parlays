@@ -14,15 +14,17 @@ const sources = [
   { name: "FDA drug database", note: "Approval and labeling status", type: "Regulatory", url: "https://www.accessdata.fda.gov/scripts/cder/daf/" },
 ];
 
+type Counts = { day: number; month: number; year: number };
+
 export default function Home() {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState("BPC-157");
-  const [counts, setCounts] = useState<{ day: number; month: number; year: number } | null>(null);
+  const [counts, setCounts] = useState<Counts | null>(null);
   const [comments, setComments] = useState([{ name: "trailrunner", text: "Please keep reports specific: what changed, how long, and what else was going on?", ago: "2h" }, { name: "labnotes", text: "The research link and regulatory status should always come before anecdotal experiences.", ago: "5h" }]);
   const [draft, setDraft] = useState("");
   const visible = reviews.filter((x) => x.peptide.toLowerCase().includes(query.toLowerCase()));
 
-  useEffect(() => { fetch("/api/views", { method: "POST" }).then((r) => r.ok ? r.json() : null).then((data) => data && setCounts(data)).catch(() => undefined); }, []);
+  useEffect(() => { fetch("/api/views", { method: "POST" }).then((r) => r.ok ? r.json() : null).then((data: Counts | null) => data && setCounts(data)).catch(() => undefined); }, []);
   async function addComment(e: React.FormEvent) { e.preventDefault(); const text = draft.trim(); if (!text) return; const response = await fetch("/api/comments", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ peptide: selected, body: text }) }); if (response.ok) { setComments([{ name: "you", text, ago: "now" }, ...comments]); setDraft(""); } }
 
   return <main>
