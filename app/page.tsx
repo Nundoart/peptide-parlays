@@ -24,7 +24,7 @@ export default function Home() {
   const [draft, setDraft] = useState("");
   const visible = reviews.filter((x) => x.peptide.toLowerCase().includes(query.toLowerCase()));
 
-  useEffect(() => { fetch("/api/views", { method: "POST" }).then((r) => r.ok ? r.json() : null).then((data: Counts | null) => data && setCounts(data)).catch(() => undefined); }, []);
+  useEffect(() => { fetch("/api/views", { method: "POST" }).then((r) => r.ok ? r.json() : null).then((data) => data && setCounts(data as Counts)).catch(() => undefined); }, []);
   async function addComment(e: React.FormEvent) { e.preventDefault(); const text = draft.trim(); if (!text) return; const response = await fetch("/api/comments", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ peptide: selected, body: text }) }); if (response.ok) { setComments([{ name: "you", text, ago: "now" }, ...comments]); setDraft(""); } }
 
   return <main>
