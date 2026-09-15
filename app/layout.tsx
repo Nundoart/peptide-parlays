@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./marketplace.css";
+import "./community.css";
 
 const siteUrl = "https://peptide-parlays-q82q.vercel.app";
 
